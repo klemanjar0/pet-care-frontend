@@ -1,22 +1,54 @@
 import React from "react";
 import {Button, Card, Form, Nav} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import {userService} from "../services/auth.service";
+import {userContainer} from "../containers/User.container";
+import App from "../App";
 
 class Login extends React.Component{
+
     constructor(props) {
         super(props);
-
         this.state = {
             username: "",
             password: "",
         };
         this.login = this.login.bind(this);
     }
+
+    state = {
+        username: "",
+        password: "",
+        myuser: {},
+    };
+
     componentWillMount() {
 
     }
+    componentDidMount() {
+
+    }
+
 
     login(e) {
+
+        userContainer.getUserByLogin(this.state.username).then(res => {
+            this.setState({
+                myuser: res
+            })
+        });
+
+        if(this.state.myuser !== undefined){
+
+            if(this.state.myuser.password === userContainer.getHash(this.state.password)){
+                userService.setToken(this.state.myuser.login);
+                userService.setIdUser(this.state.myuser.idUser);
+
+                App.loginState = true;
+            }
+
+        }
+
         e.preventDefault();
     }
 
@@ -53,15 +85,17 @@ class Login extends React.Component{
                                 minLength={8}
                             />
                         </Form.Group>
+
+
                         <Button
                             block
                             disabled={!this.validateForm()}
                             type="submit"
                             variant="primary"
+
                         >
                             Login
                         </Button>
-
 
                         <Button
                             block

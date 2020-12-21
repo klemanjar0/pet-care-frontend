@@ -6,12 +6,14 @@ export const userService = {
     isTokenExpired:isTokenExpired,
     getToken:getToken,
     logout:logout,
+    setIdUser:setIdUser,
+    getIdUser:getIdUser
 };
 
 function loggedIn() {
     const token = this.getToken()
     // token exists && is not expired
-    return !!token && !this.isTokenExpired(token)
+    return !!token
 }
 
 function isTokenExpired(token) {
@@ -35,6 +37,14 @@ function setToken(idToken) {
 
 function getToken() {
     return localStorage.getItem('id_token')
+}
+
+function setIdUser(idToken) {
+    localStorage.setItem('id_user', idToken)
+}
+
+function getIdUser() {
+    return localStorage.getItem('id_user')
 }
 
 function logout() {
